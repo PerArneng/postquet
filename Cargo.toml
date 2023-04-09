@@ -2,6 +2,14 @@
 name = "postquet"
 version = "0.1.0"
 edition = "2021"
+repository = "https://github.com/PerArneng/postquet"
+homepage = "https://github.com/PerArneng/postquet"
+license = "Apache-2.0"
+keywords = ["postgresql", "parquet"]
+description = "PostQuet: Stream PostgreSQL tables/queries to Parquet files seamlessly with this high-performance, Rust-based command-line tool."
+categories = ["command-line-utilities", "database", "data-processing"]
+readme = "README.md"
+authors = ["Per Arneng"]
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
