@@ -1,10 +1,12 @@
 mod args;
 mod postquet_engine;
 mod logging;
+mod parquet_row_processor;
 
 use args::parse_cli_args;
 use log::{debug, error, log_enabled, info, Level};
 use args::CliArgs;
+use crate::parquet_row_processor::ParquetRowProcessor;
 
 
 fn cli_args_to_connection_info(args: &CliArgs) -> postquet_engine::ConnectionInfo {
@@ -36,7 +38,8 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     let query = format!("SELECT * FROM {} ORDER BY id DESC LIMIT 10", &cli_args.table);
 
-    postquet_engine::stream_rows(&connection_info, &query).await?;
+    let processor = ParquetRowProcessor::new();
+    postquet_engine::stream_rows(&connection_info, &query, &processor).await?;
 
     Ok(())
 }

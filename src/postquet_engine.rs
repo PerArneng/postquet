@@ -1,4 +1,4 @@
-use tokio_postgres::{NoTls, Row, RowStream, Statement};
+use tokio_postgres::{Column, NoTls, Row, RowStream, Statement};
 use tokio_postgres::types::ToSql;
 use futures_util::{pin_mut, TryStreamExt};
 use tokio_postgres::types::Timestamp;
@@ -13,19 +13,15 @@ pub struct ConnectionInfo {
     pub database: String,
 }
 
-pub trait TableProcessor {
-    type ColumnIterator: Iterator<Item = &'static str>;
-
-    fn get_table_name(&self) -> &str;
-    fn get_columns(&self) -> Self::ColumnIterator;
-    fn get_max_rows(&self) -> i64;
+pub trait RowProcessor {
     fn process_row(&self, row: &Row) -> Result<(), Box<dyn std::error::Error>>;
 }
 
 pub async fn stream_rows(
     connection_info: &ConnectionInfo,
-    query: &str)
-    -> Result<(), Box<dyn std::error::Error>> {
+    query: &str,
+    processor: &impl RowProcessor)
+        -> Result<(), Box<dyn std::error::Error>> {
 
     let connection_string =
         format!("host={} user={} password={} dbname={}",
@@ -53,7 +49,7 @@ pub async fn stream_rows(
 
     pin_mut!(row_stream);
     while let Some(row) = row_stream.try_next().await? {
-        println!("{:?}", row);
+        processor.process_row(&row)?;
     }
 
     Ok(())
