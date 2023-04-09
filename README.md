@@ -1,5 +1,7 @@
 [![Build and Test](https://github.com/PerArneng/postquet/actions/workflows/main.yml/badge.svg)](https://github.com/PerArneng/postquet/actions/workflows/main.yml)
 
+**STATUS:** IN DEVELOPMENT
+
 ![logo](grfx/postquet_logo_200px.png)
 
 # PostQuet: Streaming PostgreSQL to Parquet Exporter
