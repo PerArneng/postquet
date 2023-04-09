@@ -1,9 +1,8 @@
 mod args;
 mod postquet_engine;
+mod logging;
 
 use args::parse_cli_args;
-use env_logger::{Env, fmt::{Color, Formatter}};
-use std::io::Write;
 use log::{debug, error, log_enabled, info, Level};
 use args::CliArgs;
 
@@ -21,19 +20,7 @@ fn cli_args_to_connection_info(args: &CliArgs) -> postquet_engine::ConnectionInf
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
 
-    let env = Env::default().default_filter_or("info");
-    env_logger::Builder::from_env(env)
-        .format(|buf, record| {
-            writeln!(
-                buf,
-                "{} {} [{}] {}",
-                chrono::Utc::now().format("%Y-%m-%dT%H:%M:%S.%3fZ"),
-                record.level(),
-                record.module_path().unwrap_or_default(),
-                record.args()
-            )
-        })
-        .init();
+    logging::init();
 
     let cli_args = parse_cli_args();
 
