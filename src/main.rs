@@ -38,8 +38,9 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     let query = format!("SELECT * FROM {} ORDER BY id DESC LIMIT 10", &cli_args.table);
 
-    let processor = ParquetRowProcessor::new();
+    let processor = ParquetRowProcessor::new(&"test.parquet")?;
     postquet_engine::stream_rows(&connection_info, &query, &processor).await?;
+    processor.close()?;
 
     Ok(())
 }
